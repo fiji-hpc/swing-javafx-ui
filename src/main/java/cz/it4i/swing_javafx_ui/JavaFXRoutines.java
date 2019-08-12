@@ -11,27 +11,36 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import lombok.extern.slf4j.Slf4j;
 
-public interface JavaFXRoutines {
+@Slf4j
+public final class JavaFXRoutines {
 
-	Logger log = LoggerFactory.getLogger(JavaFXRoutines.class);
+	private JavaFXRoutines() {}
 
-	static void initRootAndController(String string, Object parent) {
+	public static void initRootAndController(String string, Object parent) {
 		initRootAndController(string, parent, false);
 	}
 
-	static void initRootAndController(String string, Object parent, boolean setController) {
+	public static void initRootAndController(String string, Object parent,
+		boolean setController)
+	{
+		try {
+			Platform.runLater(()->{});
+		}
+		catch (IllegalStateException exc) {
+			new JFXPanel();
+		}
+		
 		FXMLLoader fxmlLoader = new FXMLLoader(parent.getClass().getResource(string));
 		fxmlLoader.setControllerFactory(c -> {
 			try {
@@ -59,14 +68,15 @@ public interface JavaFXRoutines {
 	}
 
 	@SuppressWarnings("unchecked")
-	static public <U, T extends ObservableValue<U>, V> void setCellValueFactory(TableView<T> tableView, int index,
+	public static <U, T extends ObservableValue<U>, V> void setCellValueFactory(
+		TableView<T> tableView, int index,
 			Function<U, V> mapper) {
 		((TableColumn<T, V>) tableView.getColumns().get(index))
 				.setCellValueFactory(f -> new ObservableValueAdapter<>(f.getValue(), mapper));
 	}
 
 	@SuppressWarnings("unchecked")
-	static public <T, V> void setCellValueFactoryForList(TableView<T> tableView,
+	public static <T, V> void setCellValueFactoryForList(TableView<T> tableView,
 		int index,
 		Callback<TableColumn.CellDataFeatures<T, V>, ObservableValue<V>> callback)
 	{
@@ -74,7 +84,7 @@ public interface JavaFXRoutines {
 			callback);
 	}
 
-	static public RunnableFuture<Void> runOnFxThread(Runnable runnable) {
+	public static RunnableFuture<Void> runOnFxThread(Runnable runnable) {
 
 		RunnableFuture<Void> result = new FutureTask<>(runnable, null);
 
@@ -88,7 +98,9 @@ public interface JavaFXRoutines {
 	}
 
 	// TODO move to own class in the future
-	static public <V> void executeAsync(Executor executor, Callable<V> action, Consumer<V> postAction) {
+	public static <V> void executeAsync(Executor executor, Callable<V> action,
+		Consumer<V> postAction)
+	{
 		executor.execute(() -> {
 			V result;
 			try {
@@ -107,7 +119,7 @@ public interface JavaFXRoutines {
 		return pred.test(j.getValue());
 	}
 
-	static public <T, U extends ObservableValue<T>> void setOnDoubleClickAction(
+	public static <T, U extends ObservableValue<T>> void setOnDoubleClickAction(
 		TableView<U> tableView, ExecutorService executorService,
 		Predicate<U> openAllowed, Consumer<U> r)
 	{
