@@ -92,7 +92,14 @@ public final class JavaFXRoutines {
 			result.run();
 		}
 		else {
-			Platform.runLater(result);
+			try {
+				Platform.runLater(result);
+			}
+			catch (IllegalStateException exc) {
+				// try to init toolkit
+				new JFXPanel();
+				Platform.runLater(result);
+			}
 		}
 		return result;
 	}
