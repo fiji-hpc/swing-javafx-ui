@@ -21,6 +21,10 @@ public class SimpleDialog {
 		// Empty private constructor to prevent creation of new object.
 	}
 
+	public static void showWarning(String header, String message) {
+		showAlert(AlertType.WARNING, header, message);
+	}
+
 	public static void showError(String header, String message) {
 		showAlert(AlertType.ERROR, header, message);
 	}
