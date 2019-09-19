@@ -13,20 +13,24 @@ import lombok.extern.slf4j.Slf4j;
  * JFXPanel makes the link between Swing (IJ) and JavaFX plugin.
  */
 @Slf4j
-public class JFXPanel<T extends Parent> extends javafx.embed.swing.JFXPanel {
+public class SwingAndJavaFXLinker<T extends Parent> extends javafx.embed.swing.JFXPanel {
 	private static final long serialVersionUID = 1L;
 
 
-	private final T control;
+	private transient final T control;
 
-	public JFXPanel(Supplier<T> fxSupplier) {
+	public SwingAndJavaFXLinker(Supplier<T> fxSupplier) {
 		Platform.setImplicitExit(false);
 		control = fxSupplier.get();
 		// The call to runLater() avoid a mix between JavaFX thread and Swing thread.
 		try {
-			JavaFXRoutines.runOnFxThread(() -> initFX()).get();
+			JavaFXRoutines.runOnFxThread(this::initFX).get();
 		}
-		catch (InterruptedException | ExecutionException exc) {
+		catch (ExecutionException exc) {
+			log.error(exc.getMessage(), exc);
+		}
+		catch (InterruptedException exc) {
+			Thread.currentThread().interrupt();
 			log.error(exc.getMessage(), exc);
 		}
 	}

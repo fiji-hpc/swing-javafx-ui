@@ -1,4 +1,3 @@
-
 package cz.it4i.swing_javafx_ui;
 
 import java.awt.BorderLayout;
@@ -16,7 +15,7 @@ public abstract class FXFrame<T extends Parent & CloseableControl> extends
 {
 
 	private static final long serialVersionUID = 1L;
-	private final JFXPanel<T> fxPanel;
+	private final SwingAndJavaFXLinker<T> fxPanel;
 	
 	private boolean controlClosed;
 
@@ -26,7 +25,7 @@ public abstract class FXFrame<T extends Parent & CloseableControl> extends
 
 	public FXFrame(Window parent, Supplier<T> fxSupplier) {
 		super(parent, ModalityType.MODELESS);
-		fxPanel = new JFXPanel<>(fxSupplier);
+		fxPanel = new SwingAndJavaFXLinker<>(fxSupplier);
 		init();
 		if (fxPanel.getControl() instanceof InitiableControl) {
 			InitiableControl control = (InitiableControl) fxPanel.getControl();
@@ -34,7 +33,7 @@ public abstract class FXFrame<T extends Parent & CloseableControl> extends
 		}
 	}
 
-	public JFXPanel<T> getFxPanel() {
+	public SwingAndJavaFXLinker<T> getFxPanel() {
 		return fxPanel;
 	}
 

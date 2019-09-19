@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public abstract class FXFrameNative<T extends Parent&CloseableControl> {
 
-	private JFXPanel<T> fxPanel;
+	private SwingAndJavaFXLinker<T> fxPanel;
 	private Stage stage;
 
 
@@ -33,10 +33,7 @@ public abstract class FXFrameNative<T extends Parent&CloseableControl> {
 		});
 	}	
 
-	
-
-
-	public JFXPanel<T> getFxPanel() {
+	public SwingAndJavaFXLinker<T> getFxPanel() {
 		return fxPanel;
 	}
 }
