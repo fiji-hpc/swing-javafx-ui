@@ -35,11 +35,25 @@ public class SimpleDialog {
 
 	private static void showAlert(AlertType type, String header, String message) {
 		Alert alert = new Alert(type);
-		alert.setTitle("Error Dialog");
+		alert.setTitle(getDialogTitlePrefix(type) + " Dialog");
 		alert.setHeaderText(header);
 		alert.setContentText(message);
 
 		alert.showAndWait();
+	}
+
+	private static String getDialogTitlePrefix(AlertType alertType) {
+		switch (alertType) {
+			case INFORMATION:
+				return "Information";
+			case WARNING:
+				return "Warning";
+			case ERROR:
+				return "Error";
+			default:
+				throw new IllegalArgumentException("Not supporter alert type " +
+					alertType);
+		}
 	}
 
 	public static File fileChooser(Stage stage, String title) {
