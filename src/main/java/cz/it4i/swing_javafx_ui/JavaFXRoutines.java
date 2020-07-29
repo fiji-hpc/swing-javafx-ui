@@ -3,6 +3,7 @@ package cz.it4i.swing_javafx_ui;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;
@@ -35,20 +36,22 @@ public final class JavaFXRoutines {
 		boolean setController)
 	{
 		try {
-			Platform.runLater(()->{});
+			Platform.runLater(() -> {});
 		}
 		catch (IllegalStateException exc) {
 			new JFXPanel();
 		}
-		
-		FXMLLoader fxmlLoader = new FXMLLoader(parent.getClass().getResource(string));
+
+		FXMLLoader fxmlLoader = new FXMLLoader(parent.getClass().getResource(
+			string));
 		fxmlLoader.setControllerFactory(c -> {
 			try {
 				if (c.equals(parent.getClass())) {
 					return parent;
 				}
 				return c.newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
+			}
+			catch (InstantiationException | IllegalAccessException e) {
 				throw new RuntimeException(e);
 			}
 		});
@@ -58,7 +61,8 @@ public final class JavaFXRoutines {
 		}
 		try {
 			fxmlLoader.load();
-		} catch (IOException exception) {
+		}
+		catch (IOException exception) {
 			throw new RuntimeException(exception);
 		}
 		if (fxmlLoader.getController() == null) {
@@ -69,10 +73,10 @@ public final class JavaFXRoutines {
 
 	@SuppressWarnings("unchecked")
 	public static <U, T extends ObservableValue<U>, V> void setCellValueFactory(
-		TableView<T> tableView, int index,
-			Function<U, V> mapper) {
-		((TableColumn<T, V>) tableView.getColumns().get(index))
-				.setCellValueFactory(f -> new ObservableValueAdapter<>(f.getValue(), mapper));
+		TableView<T> tableView, int index, Function<U, V> mapper)
+	{
+		((TableColumn<T, V>) tableView.getColumns().get(index)).setCellValueFactory(
+			f -> new ObservableValueAdapter<>(f.getValue(), mapper));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -104,6 +108,34 @@ public final class JavaFXRoutines {
 		return result;
 	}
 
+	public static void runOnFxThreadAndWait(Runnable action) {
+		if (action == null) throw new NullPointerException("action");
+
+		// run synchronously on JavaFX thread
+		if (Platform.isFxApplicationThread()) {
+			action.run();
+			return;
+		}
+
+		// queue on JavaFX thread and wait for completion
+		final CountDownLatch doneLatch = new CountDownLatch(1);
+		Platform.runLater(() -> {
+			try {
+				action.run();
+			}
+			finally {
+				doneLatch.countDown();
+			}
+		});
+
+		try {
+			doneLatch.await();
+		}
+		catch (InterruptedException e) {
+			// ignore exception
+		}
+	}
+
 	// TODO move to own class in the future
 	public static <V> void executeAsync(Executor executor, Callable<V> action,
 		Consumer<V> postAction)
@@ -113,13 +145,16 @@ public final class JavaFXRoutines {
 			try {
 				result = action.call();
 				postAction.accept(result);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
 		});
 	}
-	
-	public static <T> boolean notNullValue(ObservableValue<T> j, Predicate<T> pred) {
+
+	public static <T> boolean notNullValue(ObservableValue<T> j,
+		Predicate<T> pred)
+	{
 		if (j == null || j.getValue() == null) {
 			return false;
 		}
