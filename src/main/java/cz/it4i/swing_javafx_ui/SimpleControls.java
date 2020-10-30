@@ -16,6 +16,7 @@ public class SimpleControls {
 		spinner.getEditor().textProperty().addListener((
 			ObservableValue<? extends String> observable, String oldValue,
 			String newValue) -> {
+
 				// Value should be numeric only:
 				if (!newValue.matches("\\d*"))
 				{
@@ -27,13 +28,16 @@ public class SimpleControls {
 				{
 				int temp = Integer.parseInt(newValue);
 				if (temp < lowerBound) {
-					JavaFXRoutines.runOnFxThread(() -> spinner.getEditor().setText("" +
-						lowerBound));
+					temp = lowerBound;
 				}
 				else if (temp > upperBound) {
-					JavaFXRoutines.runOnFxThread(() -> spinner.getEditor().setText("" +
-						upperBound));
+					temp = upperBound;
 				}
+				final int cleanValue = temp;
+				JavaFXRoutines.runOnFxThread(() -> {
+					spinner.getEditor().setText("" + cleanValue);
+					spinner.getValueFactory().setValue(cleanValue);
+				});
 			}
 			catch (Exception e) {
 				// Value should be an integer.
