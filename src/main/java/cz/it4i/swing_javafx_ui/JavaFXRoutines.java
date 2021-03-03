@@ -25,6 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class JavaFXRoutines {
+	
+	// Due to a bug in JavaFX the font smoothing does not work
+	// correctly and must be disabled.
+	static {
+		System.setProperty("prism.lcdtext", "false");
+	}
 
 	private JavaFXRoutines() {}
 
