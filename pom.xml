@@ -5,7 +5,7 @@
 
 	<groupId>it4i-fiji</groupId>
 	<artifactId>swing-javafx-ui</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>swing-javafx-ui</name>
@@ -52,6 +52,23 @@
 			<optional>true</optional>
 			<version>1.7.26</version>
 		</dependency>
+		<!-- This section is used for the font icons -->
+		<dependency>
+			<groupId>org.kordamp.ikonli</groupId>
+			<artifactId>ikonli-core</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.kordamp.ikonli</groupId>
+			<artifactId>ikonli-javafx</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.kordamp.ikonli</groupId>
+			<artifactId>ikonli-materialdesign-pack</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		<!-- end section -->
 	</dependencies>
 	<distributionManagement>
 		<repository>

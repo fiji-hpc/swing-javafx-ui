@@ -5,10 +5,14 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
@@ -22,22 +26,30 @@ public class SimpleDialog {
 	}
 
 	public static void showWarning(String header, String message) {
-		showAlert(AlertType.WARNING, header, message);
+		showAlert(AlertType.WARNING, header, message, MaterialDesign.MDI_ALERT);
 	}
 
 	public static void showError(String header, String message) {
-		showAlert(AlertType.ERROR, header, message);
+		showAlert(AlertType.ERROR, header, message, MaterialDesign.MDI_ALERT_BOX);
 	}
 
 	public static void showInformation(String header, String message) {
-		showAlert(AlertType.INFORMATION, header, message);
+		showAlert(AlertType.INFORMATION, header, message,
+			MaterialDesign.MDI_ALERT_CIRCLE);
 	}
 
-	private static void showAlert(AlertType type, String header, String message) {
+	private static void showAlert(AlertType type, String header, String message,
+		Ikon icon)
+	{
 		Alert alert = new Alert(type);
 		alert.setTitle(getDialogTitlePrefix(type) + " Dialog");
 		alert.setHeaderText(header);
 		alert.setContentText(message);
+
+		// Add icon:
+		Image myImage = IconHelperMethods.convertIkonToImage(icon);
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		stage.getIcons().add(myImage);
 
 		alert.showAndWait();
 	}
@@ -59,6 +71,12 @@ public class SimpleDialog {
 	public static File fileChooser(Stage stage, String title) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
+
+		// Set icon:
+		Image myImage = IconHelperMethods.convertIkonToImage(
+			MaterialDesign.MDI_FILE);
+		stage.getIcons().add(myImage);
+
 		File selectedFile = fileChooser.showOpenDialog(stage);
 		if (selectedFile != null) {
 			return selectedFile;
@@ -69,6 +87,12 @@ public class SimpleDialog {
 	public static File directoryChooser(Stage stage, String title) {
 		DirectoryChooser directoryChooser = new DirectoryChooser();
 		directoryChooser.setTitle(title);
+
+		// Set icon:
+		Image myImage = IconHelperMethods.convertIkonToImage(
+			MaterialDesign.MDI_FOLDER);
+		stage.getIcons().add(myImage);
+
 		File selectedFile = directoryChooser.showDialog(stage);
 		if (selectedFile != null) {
 			return selectedFile;
@@ -108,6 +132,12 @@ public class SimpleDialog {
 
 		// Set expandable Exception into the dialog pane.
 		alert.getDialogPane().setExpandableContent(expContent);
+
+		// Set icon:
+		Image myImage = IconHelperMethods.convertIkonToImage(
+			MaterialDesign.MDI_EXCLAMATION);
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		stage.getIcons().add(myImage);
 
 		alert.showAndWait();
 	}
