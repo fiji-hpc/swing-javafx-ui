@@ -30,7 +30,7 @@ public class SimpleDialog {
 	}
 
 	public static void showError(String header, String message) {
-		showAlert(AlertType.ERROR, header, message, MaterialDesign.MDI_ALERT_BOX);
+		showAlert(AlertType.ERROR, header, message, MaterialDesign.MDI_CLOSE_BOX);
 	}
 
 	public static void showInformation(String header, String message) {
@@ -135,7 +135,7 @@ public class SimpleDialog {
 
 		// Set icon:
 		Image myImage = IconHelperMethods.convertIkonToImage(
-			MaterialDesign.MDI_EXCLAMATION);
+			MaterialDesign.MDI_CLOSE_BOX);
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 		stage.getIcons().add(myImage);
 
