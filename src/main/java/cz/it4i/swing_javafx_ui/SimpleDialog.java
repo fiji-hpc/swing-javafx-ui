@@ -4,12 +4,14 @@ package cz.it4i.swing_javafx_ui;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Optional;
 
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -33,13 +35,24 @@ public class SimpleDialog {
 		showAlert(AlertType.ERROR, header, message, MaterialDesign.MDI_CLOSE_BOX);
 	}
 
+	public static boolean showConfirmation(String header, String message) {
+		boolean userConfirms = false;
+		Optional<ButtonType> result = showAlertAndGetResult(AlertType.CONFIRMATION,
+			header, message, MaterialDesign.MDI_COMMENT_QUESTION_OUTLINE);
+
+		if (result.isPresent() && result.get() == ButtonType.OK) {
+			userConfirms = true;
+		}
+		return userConfirms;
+	}
+
 	public static void showInformation(String header, String message) {
 		showAlert(AlertType.INFORMATION, header, message,
 			MaterialDesign.MDI_ALERT_CIRCLE);
 	}
 
-	private static void showAlert(AlertType type, String header, String message,
-		Ikon icon)
+	private static Alert prepareAlert(AlertType type, String header,
+		String message, Ikon icon)
 	{
 		Alert alert = new Alert(type);
 		alert.setTitle(getDialogTitlePrefix(type) + " Dialog");
@@ -51,7 +64,20 @@ public class SimpleDialog {
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 		stage.getIcons().add(myImage);
 
-		alert.showAndWait();
+		return alert;
+	}
+
+	private static void showAlert(AlertType type, String header, String message,
+		Ikon icon)
+	{
+		prepareAlert(type, header, message, icon).showAndWait();
+	}
+
+	private static Optional<ButtonType> showAlertAndGetResult(AlertType type,
+		String header, String message, Ikon icon)
+	{
+		Alert alert = prepareAlert(type, header, message, icon);
+		return alert.showAndWait();
 	}
 
 	private static String getDialogTitlePrefix(AlertType alertType) {
@@ -62,9 +88,11 @@ public class SimpleDialog {
 				return "Warning";
 			case ERROR:
 				return "Error";
+			case CONFIRMATION:
+				return "Confirmation";
 			default:
-				throw new IllegalArgumentException("Not supporter alert type " +
-					alertType);
+				throw new IllegalArgumentException("Alert type " + alertType +
+					" is not supported!");
 		}
 	}
 
