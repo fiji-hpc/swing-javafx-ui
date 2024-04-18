@@ -13,9 +13,7 @@ javafx {
             "javafx.controls",
             "javafx.fxml",
             "javafx.graphics",
-            "javafx.media",
-            "javafx.swing",
-            "javafx.web")
+            "javafx.swing")
 }
 
 dependencies {
