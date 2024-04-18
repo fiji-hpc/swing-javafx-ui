@@ -153,7 +153,8 @@ public final class JavaFXRoutines {
 				postAction.accept(result);
 			}
 			catch (Exception e) {
-				log.error(e.getMessage(), e);
+				//log.error(e.getMessage(), e);
+				System.err.println(e.getMessage());
 			}
 		});
 	}

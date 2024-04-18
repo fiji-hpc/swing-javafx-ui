@@ -27,11 +27,13 @@ public class SwingAndJavaFXLinker<T extends Parent> extends javafx.embed.swing.J
 			JavaFXRoutines.runOnFxThread(this::initFX).get();
 		}
 		catch (ExecutionException exc) {
-			log.error(exc.getMessage(), exc);
+			//log.error(exc.getMessage(), exc);
+			System.err.println(exc.getMessage());
 		}
 		catch (InterruptedException exc) {
 			Thread.currentThread().interrupt();
-			log.error(exc.getMessage(), exc);
+			//log.error(exc.getMessage(), exc);
+			System.err.println(exc.getMessage());
 		}
 	}
 
