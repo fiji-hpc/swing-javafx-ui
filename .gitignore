@@ -32,3 +32,8 @@ hs_err_pid*
 *.bak
 
 /output
+/build
+/.idea
+/.gradle
+
+.*.sw*
